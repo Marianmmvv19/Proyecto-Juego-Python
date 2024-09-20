@@ -50,3 +50,26 @@ over_font= pygame.font.Font(asset_over_font)
 #Cargar fuente para texto de puntaje 
 asset_font = resource_path('assets/fonts/comicbd.ttf')
 font = pygame.font.Font(asset_font)
+
+#Establecer titulo de ventana
+pygame.display.set_caption("Space Invader")
+
+#Establecer icono de la ventana 
+pygame.mixer.musicplay(-1)
+
+#Crear reloj para controlar la velocidad del juego 
+clock = pygame.time.Clock()
+
+#Posicion inicial del jugador
+playerX = 370
+playerY = 470
+player_change = 0
+player_change = 0
+
+#Lista para almacenar posiciones del enemigo 
+enemyimg=[]
+enemyX = []
+enemyY = []
+enemyX_change = []
+enemyY_change = []
+no_of_enemies = 10
