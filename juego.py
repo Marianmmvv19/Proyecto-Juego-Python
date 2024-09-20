@@ -31,18 +31,22 @@ background = pygame.image.load(asset_icon)
 
     
 #Cargar sonido de fondo
-asset_sound = resource_path('assets/images/background_music.png')
+asset_sound = resource_path('assets/images/background_music.mp3')
 background = pygame.image.load(asset_sound)
 
 #Cargar imagen del jugador
-asset_playering = resource_path('assets/images/space-invaders.png')
-background = pygame.image.load(asset_playering)
+asset_playerimg = resource_path('assets/images/space-invaders.png')
+playerimg = pygame.image.load(asset_playering)
 
 #Cargar imagen del bala 
-asset_background = resource_path('assets/images/bullet.png')
-background = pygame.image.load(asset_bulletimg)
+asset_bulletimg = resource_path('assets/images/bullet.png')
+bulletimg = pygame.image.load(asset_bulletimg)
 
 
 #Cargar fuente para texto  de game over 
 asset_over_font = resource_path('assets/fonts/RAVIE.TTF')
-background = pygame.font.Font(asset_bulletimg)
+over_font= pygame.font.Font(asset_over_font)
+
+#Cargar fuente para texto de puntaje 
+asset_font = resource_path('assets/fonts/comicbd.ttf')
+font = pygame.font.Font(asset_font)
