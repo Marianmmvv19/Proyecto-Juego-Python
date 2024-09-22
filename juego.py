@@ -73,3 +73,13 @@ enemyY = []
 enemyX_change = []
 enemyY_change = []
 no_of_enemies = 10
+
+#Se inicializa las variables para guaradar las posiciones del enemigo
+for i in range(no_of_enemies):
+    enemy1 = resource_path('assets/images/enemy1.png')
+    enemyimg.append(pygame.image.load(enemy1))
+
+    enemy2 = resource_path('assets/images/enemy2.png')
+    enemyimg.append(pygame.image.load(enemy2))
+
+
