@@ -76,10 +76,17 @@ no_of_enemies = 10
 
 #Se inicializa las variables para guaradar las posiciones del enemigo
 for i in range(no_of_enemies):
+
+    #Se carga la imagen del enemigo 1 
     enemy1 = resource_path('assets/images/enemy1.png')
     enemyimg.append(pygame.image.load(enemy1))
 
+    #Se carga la imagen del enemigo 2 
     enemy2 = resource_path('assets/images/enemy2.png')
     enemyimg.append(pygame.image.load(enemy2))
+
+    #Se asigna una posición aleatoria en X y Y para el enemigo
+    enemyX.append(random.randit(0,736))
+    enemyX.append(random.randit(0,150))
 
 
