@@ -89,4 +89,8 @@ for i in range(no_of_enemies):
     enemyX.append(random.randit(0,736))
     enemyX.append(random.randit(0,150))
 
+    #Se establece la velocidad de movimiento del enemigo en X y Y 
+    enemyX_change.append(5)
+    enemyY_change.append(20)
+
 
