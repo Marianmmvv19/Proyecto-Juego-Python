@@ -93,4 +93,13 @@ for i in range(no_of_enemies):
     enemyX_change.append(5)
     enemyY_change.append(20)
 
+    #Se inicializa la puntuacion en 0 
+    score = 0 
+
+    #funcion para mostar la puntuación en la pantalla 
+    def show_score():
+        score_value = font.render("SCORE " + str(score), True, (255, 255, 255))
+        screen.blit(score_value, (10,10))
+    
+    
 
