@@ -101,5 +101,10 @@ for i in range(no_of_enemies):
         score_value = font.render("SCORE " + str(score), True, (255, 255, 255))
         screen.blit(score_value, (10,10))
     
+    #funcion para dibujar el jugador en la pantalla 
+    def player(x ,y):
+        screen.blit(playering, (x ,y))
+        
+    
     
 
