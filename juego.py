@@ -103,8 +103,15 @@ for i in range(no_of_enemies):
     
     #funcion para dibujar el jugador en la pantalla 
     def player(x ,y):
-        screen.blit(playering, (x ,y))
-        
+        screen.blit(playerimg, (x ,y))
+    
+    #funcion para dibujar el jugador enemigo en la pantalla 
+    def player(x ,y):
+        screen.blit(playerimg[i], (x ,y))
+
+
+
+
     
     
 
