@@ -109,7 +109,13 @@ for i in range(no_of_enemies):
     def player(x ,y):
         screen.blit(playerimg[i], (x ,y))
 
+   #funcion para disparar la bala
+   def fire_bullet(x,y):
+    global bullet_state
 
+    bullet_state = "fire"
+    screen.blit(bulletimg, (x+16, y + 10))
+    
 
 
     
