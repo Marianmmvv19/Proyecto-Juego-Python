@@ -115,6 +115,18 @@ for i in range(no_of_enemies):
 
     bullet_state = "fire"
     screen.blit(bulletimg, (x+16, y + 10))
+  
+  #funcion para observar si ha habido una colisión entre la bala y el enemigo 
+  def isCollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt((math.pow(enemyx - enemyY, 2)) +
+                         (math.pow(enemyY-enemyX)))
+    if distance < 27:
+        return True
+    else:
+        return False
+    
+
+       
     
 
 
