@@ -125,6 +125,12 @@ for i in range(no_of_enemies):
     else:
         return False
     
+  #funcion para mostar el texto de game over en pantalla 
+  def game_over_text():
+    over_text= over_font.render("GAME OVER", True, (255, 255, 255))
+    text_rect = over_text.get_rect(
+        center=(int(screen_width/2), int(screen_height/2)))
+    screen.blit(over_text, text_rect)
 
        
     
