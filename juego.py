@@ -63,8 +63,8 @@ clock = pygame.time.Clock()
 #Posicion inicial del jugador
 playerX = 370
 playerY = 470
-player_change = 0
-player_change = 0
+playerX_change = 0
+playerY_change = 0
 
 #Lista para almacenar posiciones del enemigo 
 enemyimg=[]
@@ -92,6 +92,13 @@ for i in range(no_of_enemies):
     #Se establece la velocidad de movimiento del enemigo en X y Y 
     enemyX_change.append(5)
     enemyY_change.append(20)
+
+    #Se inicializan las varibles para guardar la posicion de la bala
+    bulletX = 0
+    bulletY = 480
+    bulletX_change = 0
+    bulletY_change = 10
+    bullet_state= "ready"
 
     #Se inicializa la puntuacion en 0 
     score = 0 
@@ -131,6 +138,18 @@ for i in range(no_of_enemies):
     text_rect = over_text.get_rect(
         center=(int(screen_width/2), int(screen_height/2)))
     screen.blit(over_text, text_rect)
+  
+  #Función principl del Juego
+  def gameloop();
+    
+    #Declarar variables globales
+    global score
+    global playerX
+    global playerX_change
+    global bulletX
+    global bulletY
+    global Collision
+    global bullet_state
 
        
     
