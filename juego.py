@@ -36,7 +36,7 @@ background = pygame.image.load(asset_sound)
 
 #Cargar imagen del jugador
 asset_playerimg = resource_path('assets/images/space-invaders.png')
-playerimg = pygame.image.load(asset_playering)
+playerimg = pygame.image.load(asset_playerimg)
 
 #Cargar imagen del bala 
 asset_bulletimg = resource_path('assets/images/bullet.png')
@@ -116,40 +116,70 @@ for i in range(no_of_enemies):
     def player(x ,y):
         screen.blit(playerimg[i], (x ,y))
 
-   #funcion para disparar la bala
-   def fire_bullet(x,y):
+    #funcion para disparar la bala
+    def fire_bullet(x,y):
     global bullet_state
 
     bullet_state = "fire"
     screen.blit(bulletimg, (x+16, y + 10))
   
-  #funcion para observar si ha habido una colisión entre la bala y el enemigo 
-  def isCollision(enemyX, enemyY, bulletX, bulletY):
-    distance = math.sqrt((math.pow(enemyx - enemyY, 2)) +
+    #funcion para observar si ha habido una colisión entre la bala y el enemigo 
+    def isCollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt((math.pow(enemyX - enemyY, 2)) +
                          (math.pow(enemyY-enemyX)))
     if distance < 27:
         return True
     else:
         return False
     
-  #funcion para mostar el texto de game over en pantalla 
-  def game_over_text():
+    #funcion para mostar el texto de game over en pantalla 
+    def game_over_text():
     over_text= over_font.render("GAME OVER", True, (255, 255, 255))
     text_rect = over_text.get_rect(
         center=(int(screen_width/2), int(screen_height/2)))
     screen.blit(over_text, text_rect)
   
-  #Función principl del Juego
-  def gameloop();
+    #Función principl del Juego
+    def gameloop():
     
     #Declarar variables globales
-    global score
-    global playerX
-    global playerX_change
-    global bulletX
-    global bulletY
-    global Collision
-    global bullet_state
+        global score
+        global playerX
+        global playerX_change
+        global bulletX
+        global bulletY
+        global Collision
+        global bullet_state
+
+    in_game = True 
+    while in_game:
+        #Maneja eventos, actualiza y renderiza el juego 
+        #Limpia la pantalla 
+        screen.fill(0,0,0)
+        screen.blit(background, (0,0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                in_game = False 
+                pygame.quit()
+                sys.exit()
+            
+            if event.type == pygame.KEYDOM:
+                #Maneja el movimiento del jugador y el disparo 
+                if event.key == pygame.K_LEFT:
+                    playerX_change = -5
+
+                if event.key == pygame.K_RIGHT:
+                    playerY_change = 5
+                
+                if event.key == pygame.K_SPACE:
+                    if bullet_state == "ready":
+                        bulletX = playerX
+                        fire_bullet(bulletX, bulletY)
+                
+                if event.type == pygame.KEYUP:
+                    playerX_change = 0
+        
 
        
     
