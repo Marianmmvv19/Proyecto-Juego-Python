@@ -179,6 +179,13 @@ for i in range(no_of_enemies):
                 
                 if event.type == pygame.KEYUP:
                     playerX_change = 0
+
+        #Aquí se está actualizando la posicion del jugador 
+        playerX +=  playerX_change
+        if playerX <= 0:
+           playerX = 0
+        elif playerX >= 736:
+            playerX = 736 
         
 
        
