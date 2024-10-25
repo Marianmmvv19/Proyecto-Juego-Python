@@ -187,11 +187,24 @@ for i in range(no_of_enemies):
         elif playerX >= 736:
             playerX = 736 
         
+        #Aquí se está actualizando la posicion del jugador 
+        playerX +=  playerX_change
+        if playerX <= 0:
+           playerX = 0
+        elif playerX >= 736:
+        
+        #Bucle que se ejecuta para cada enemigo 
+        for i in range(no_of_enemies):
+            if enemyY[i] > 440:
+                for j in range(no_of_enemies):
+                    enemyY[j]=2000
+                game_over_text()
+            
+            enemyX[i] += enemyX_change[i]
 
-       
-    
-
-
-    
-    
-
+            if enemyX[i] <= 0:
+                enemyX_change[i] = 5
+                enemyY[i] += enemyY_change[i]
+            elif enemyX[i] >= 736:
+                enemyX_change[i] = -5 
+                enemyY[i] += enemyY_change[i]
