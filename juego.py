@@ -208,3 +208,29 @@ for i in range(no_of_enemies):
             elif enemyX[i] >= 736:
                 enemyX_change[i] = -5 
                 enemyY[i] += enemyY_change[i]
+        
+            #Aqui se comprueba si ha habido una colisión entre enemigo y una bala
+
+            isCollision = isCollision(enemyX[i],enemyY[i], bulletX)
+            if collison:
+                bulletY=454
+                bullet_state="ready"
+                score += 1
+                enemyX[i] = random.radiant(0,736)
+                enemyY[i] = random.radiante(0, 150)
+            enemy(enemyX[i], enemyY[i],i)
+
+        if bulletY < 0:
+            bulletY=454
+            bullet_state = "ready"
+        if bullet_state == "fire":
+            fire_bullet(bulletX, bulletY)
+            bulletY -= bulletY_change
+        
+        player(playerX, playerY)
+        show_score()
+
+        pygame.display.update()
+        clock.tick(120)
+
+gameloop()
