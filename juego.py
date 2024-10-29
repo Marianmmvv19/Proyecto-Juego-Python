@@ -1,15 +1,43 @@
 import pygame
 import random
+import math
 import sys
 import os
 
 # Inicializar pygame
 pygame.init()
 
-# Tamaño de pantalla
+# Establecer tamaño de pantalla
 screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
+
+# Definir preguntas y respuestas
+questions = [
+    {"question": "¿Cómo declarar una lista en Python?", "options": ["1. list = []", "2. list = {}", "3. list = ()"], "answer": 1},
+    {"question": "¿Cómo agregar un elemento a una lista?", "options": ["1. list.append(elemento)", "2. list.add(elemento)", "3. list.insert(elemento)"], "answer": 1},
+    {"question": "¿Cuál es el bucle para iterar una lista?", "options": ["1. while", "2. for", "3. foreach"], "answer": 2},
+]
+current_question = None
+show_question = False
+
+# Función para mostrar pregunta y opciones
+def display_question():
+    question_font = pygame.font.Font(None, 28)
+    question_text = question_font.render(current_question["question"], True, (255, 255, 255))
+    screen.blit(question_text, (50, 50))
+
+    for i, option in enumerate(current_question["options"]):
+        option_text = question_font.render(option, True, (255, 255, 255))
+        screen.blit(option_text, (50, 100 + i * 30))
+
+# Función para verificar respuesta
+def check_answer(selected_option):
+    global show_question, current_question, score
+    if selected_option == current_question["answer"]:
+        score += 5  # Añadir puntos si es correcto
+    show_question = False
+    current_question = None
 
 # Función para obtener la ruta de los recursos
 def resource_path(relative_path):
@@ -19,192 +47,154 @@ def resource_path(relative_path):
         base_path = os.path.abspath(".")
     return os.path.join(base_path, relative_path)
 
-# Ruta y carga de recursos gráficos y sonidos
+# Cargar imagen de fondo
 background = pygame.image.load(resource_path('./images/background.png'))
+
+# Cargar icono de ventana
 icon = pygame.image.load(resource_path('./images/ufo.png'))
 pygame.display.set_icon(icon)
-pygame.display.set_caption("Space Invader")
+
+# Cargar sonido de fondo
 pygame.mixer.music.load(resource_path('./audios/background_music.mp3'))
-pygame.mixer.music.play(-1)
+pygame.mixer.music.play(-1)  # Reproducir en bucle
 
-# Fuentes para texto
-font = pygame.font.Font(resource_path('./fonts/comicbd.ttf'), 32)
-over_font = pygame.font.Font(resource_path('./fonts/RAVIE.TTF'), 60)
-
-# Configuración del jugador
+# Cargar imagen del jugador
 playerimg = pygame.image.load(resource_path('./images/space-invaders.png'))
-bulletimg = pygame.image.load(resource_path('./images/bullet.png'))
-enemyimg = pygame.image.load(resource_path('./images/enemy1.png'))
 
-playerX, playerY = 370, 480
+# Cargar imagen de la bala
+bulletimg = pygame.image.load(resource_path('./images/bullet.png'))
+
+# Cargar fuente para texto de puntaje
+font = pygame.font.Font(None, 32)
+
+# Variables del jugador y balas
+playerX = 370
+playerY = 470
 playerX_change = 0
-bulletX, bulletY, bullet_state = 0, 480, "ready"
+bulletX = 0
+bulletY = 480
+bulletY_change = 10
+bullet_state = "ready"
+
+# Variables del enemigo
+enemyimg = [pygame.image.load(resource_path('./images/enemy1.png')) for _ in range(5)]
+enemyX = [random.randint(0, 736) for _ in range(5)]
+enemyY = [random.randint(50, 150) for _ in range(5)]
+enemyX_change = [5] * 5
+enemyY_change = [20] * 5
+
+# Puntuación inicial
 score = 0
 
-# Configuración de enemigos
-num_of_enemies = 6
-enemies = []
-for i in range(num_of_enemies):
-    enemies.append({
-        "img": enemyimg,
-        "x": random.randint(0, screen_width - 64),
-        "y": random.randint(50, 150),
-        "x_change": 2,  # Reducir velocidad de los enemigos
-        "y_change": 40
-    })
-
-# Preguntas y respuestas para mostrar en colisión
-questions = [
-    {
-        "question": "¿Cómo creas una lista en Python?",
-        "options": ["lista = {}", "lista = []", "lista = ()", "lista = <>"],
-        "answer": "lista = []"
-    },
-    {
-        "question": "¿Cómo agregas un elemento a una lista?",
-        "options": ["lista.push()", "lista.add()", "lista.append()", "lista.insert()"],
-        "answer": "lista.append()"
-    },
-    {
-        "question": "¿Cuál es la función para obtener la longitud de una lista?",
-        "options": ["count()", "len()", "size()", "length()"],
-        "answer": "len()"
-    },
-    # Agrega más preguntas si deseas
-]
-
-# Función para mostrar preguntas aleatorias en tarjeta oscura
-def show_question():
-    question_data = random.choice(questions)
-    question = question_data["question"]
-    options = question_data["options"]
-    correct_answer = question_data["answer"]
-
-    # Mezcla las opciones
-    random.shuffle(options)
-    
-    # Fondo oscuro para la tarjeta
-    pygame.draw.rect(screen, (0, 0, 0), (100, 100, 600, 400))
-    pygame.draw.rect(screen, (255, 255, 255), (100, 100, 600, 400), 2)
-    
-    # Mostrar pregunta
-    question_text = font.render(question, True, (255, 255, 255))
-    screen.blit(question_text, (120, 140))
-
-    # Mostrar opciones
-    for i, option in enumerate(options):
-        option_text = font.render(f"{i + 1}. {option}", True, (255, 255, 255))
-        screen.blit(option_text, (120, 200 + i * 40))
-
-    return question_data
-
-# Función para comprobar la respuesta
-def check_answer(selected_option, correct_answer):
-    global score
-    if selected_option == correct_answer:
-        score += 10  # Ajusta los puntos a tu preferencia
-    else:
-        score -= 5  # Penalización si es incorrecta
-
-# Función para mostrar puntuación
+# Función para mostrar la puntuación en pantalla
 def show_score():
-    score_value = font.render("SCORE: " + str(score), True, (255, 255, 255))
+    score_value = font.render("SCORE " + str(score), True, (255, 255, 255))
     screen.blit(score_value, (10, 10))
 
+# Función para dibujar al jugador
+def player(x, y):
+    screen.blit(playerimg, (x, y))
+
+# Función para dibujar al enemigo
+def enemy(x, y, i):
+    screen.blit(enemyimg[i], (x, y))
+
+# Función para disparar la bala
+def fire_bullet(x, y):
+    global bullet_state
+    bullet_state = "fire"
+    screen.blit(bulletimg, (x + 16, y + 10))
+
 # Función para detectar colisión
-def is_collision(enemyX, enemyY, bulletX, bulletY):
-    distance = ((enemyX - bulletX) ** 2 + (enemyY - bulletY) ** 2) ** 0.5
+def isCollision(enemyX, enemyY, bulletX, bulletY):
+    distance = math.sqrt(math.pow(enemyX - bulletX, 2) + math.pow(enemyY - bulletY, 2))
     return distance < 27
 
 # Función principal del juego
 def game_loop():
-    global playerX, playerX_change, bulletX, bulletY, bullet_state, score
+    global playerX, playerX_change, bulletX, bulletY, bullet_state, score, show_question, current_question
 
     in_game = True
-    show_question_card = False
-    selected_question = None
-    question_shown = False  # Bandera para asegurarse de que solo se muestre una pregunta
-    answered_question = False  # Bandera para asegurarse de que solo se responda una pregunta
-
     while in_game:
+        # Limpiar pantalla
         screen.fill((0, 0, 0))
         screen.blit(background, (0, 0))
 
+        # Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_LEFT:
-                    playerX_change = -5
-                if event.key == pygame.K_RIGHT:
-                    playerX_change = 5
-                if event.key == pygame.K_SPACE and bullet_state == "ready":
-                    bulletX = playerX
-                    bullet_state = "fire"
-            if event.type == pygame.KEYUP and (event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
-                playerX_change = 0
-
-            # Eventos para responder preguntas
-            if show_question_card and event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    selected_option = selected_question["options"][0]
-                elif event.key == pygame.K_2:
-                    selected_option = selected_question["options"][1]
-                elif event.key == pygame.K_3:
-                    selected_option = selected_question["options"][2]
-                elif event.key == pygame.K_4:
-                    selected_option = selected_question["options"][3]
+                if not show_question:
+                    if event.key == pygame.K_LEFT:
+                        playerX_change = -5
+                    if event.key == pygame.K_RIGHT:
+                        playerX_change = 5
+                    if event.key == pygame.K_SPACE and bullet_state == "ready":
+                        bulletX = playerX
+                        fire_bullet(bulletX, bulletY)
                 else:
-                    continue
-                
-                check_answer(selected_option, selected_question["answer"])
-                show_question_card = False
-                answered_question = True  # Marcar que la pregunta ha sido respondida
+                    # Responder pregunta
+                    if event.key == pygame.K_1:
+                        check_answer(1)
+                    elif event.key == pygame.K_2:
+                        check_answer(2)
+                    elif event.key == pygame.K_3:
+                        check_answer(3)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    playerX_change = 0
 
-        # Actualizar posición del jugador y bala
+        # Actualizar posición del jugador
         playerX += playerX_change
         playerX = max(0, min(playerX, 736))
 
-        if bulletY < 0:
-            bulletY, bullet_state = 480, "ready"
+        # Movimiento enemigo
+        for i in range(len(enemyimg)):
+            if enemyY[i] > 440:
+                return  # Termina el juego si un enemigo llega a la parte inferior
 
-        if bullet_state == "fire":
-            bulletY -= 10
-            screen.blit(bulletimg, (bulletX + 16, bulletY + 10))
+            enemyX[i] += enemyX_change[i]
+            if enemyX[i] <= 0:
+                enemyX_change[i] = 5
+                enemyY[i] += enemyY_change[i]
+            elif enemyX[i] >= 736:
+                enemyX_change[i] = -5
+                enemyY[i] += enemyY_change[i]
 
-        # Enemigos
-        for enemy in enemies:
-            # Movimiento enemigo
-            enemy['x'] += enemy['x_change']
-            if enemy['x'] <= 0 or enemy['x'] >= screen_width - 64:
-                enemy['x_change'] *= -1
-                enemy['y'] += enemy['y_change']
-
-            # Detectar colisión
-            collision = is_collision(enemy['x'], enemy['y'], bulletX, bulletY)
-            if collision and not question_shown and not answered_question:  # Solo mostrar una pregunta por colisión y una vez
-                bulletY, bullet_state = 480, "ready"
+            # Colisión
+            if isCollision(enemyX[i], enemyY[i], bulletX, bulletY):
+                bulletY = 480
+                bullet_state = "ready"
                 score += 1
-                show_question_card = True
-                selected_question = show_question()
-                question_shown = True  # Marcar que se ha mostrado una pregunta
+                enemyX[i] = random.randint(0, 736)
+                enemyY[i] = random.randint(50, 150)
 
-            screen.blit(enemy['img'], (enemy['x'], enemy['y']))
+                # Mostrar pregunta aleatoria
+                current_question = random.choice(questions)
+                show_question = True
+            
+            enemy(enemyX[i], enemyY[i], i)
 
-        # Mostrar puntuación y jugador
+        # Movimiento de la bala
+        if bulletY < 0:
+            bulletY = 480
+            bullet_state = "ready"
+        if bullet_state == "fire":
+            fire_bullet(bulletX, bulletY)
+            bulletY -= bulletY_change
+
+        # Dibujar jugador y mostrar puntuación
+        player(playerX, playerY)
         show_score()
-        screen.blit(playerimg, (playerX, playerY))
 
-        # Mostrar tarjeta de pregunta si hay colisión
-        if show_question_card and not answered_question:
-            show_question()
+        # Mostrar pregunta si está activa
+        if show_question:
+            display_question()
 
-        # Reiniciar después de responder
-        if answered_question:
-            question_shown = False  # Se puede mostrar una nueva pregunta
-            answered_question = False  # Esperar una nueva colisión
-
+        # Actualizar pantalla
         pygame.display.update()
+        pygame.time.Clock().tick(60)
 
 game_loop()
