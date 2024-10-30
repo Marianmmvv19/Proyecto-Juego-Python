@@ -21,15 +21,37 @@ questions = [
 current_question = None
 show_question = False
 
-# Función para mostrar pregunta y opciones
-def display_question():
-    question_font = pygame.font.Font(None, 28)
-    question_text = question_font.render(current_question["question"], True, (255, 255, 255))
-    screen.blit(question_text, (50, 50))
+# Función para mostrar pregunta y opciones en una tarjeta
+def Ventana_pregunta():
+    # Colores
+    card_color = (50, 50, 150)  # Azul oscuro
+    border_color = (255, 255, 255)  # Blanco
+    text_color = (255, 255, 255)  # Blanco
+    
+    # Dimensiones de la tarjeta
+    card_width = 600
+    card_height = 300
+    card_x = (screen_width - card_width) // 2
+    card_y = (screen_height - card_height) // 2
+    
+    # Dibujar el fondo y borde de la tarjeta
+    pygame.draw.rect(screen, border_color, (card_x - 5, card_y - 5, card_width + 10, card_height + 10))  # Borde
+    pygame.draw.rect(screen, card_color, (card_x, card_y, card_width, card_height))  # Tarjeta
 
+    # Renderizar el texto
+    question_font = pygame.font.Font(None, 36)
+    option_font = pygame.font.Font(None, 32)
+
+    # Mostrar la pregunta centrada en la tarjeta
+    question_text = question_font.render(current_question["question"], True, text_color)
+    question_rect = question_text.get_rect(center=(screen_width // 2, card_y + 50))
+    screen.blit(question_text, question_rect)
+
+    # Mostrar opciones debajo de la pregunta
     for i, option in enumerate(current_question["options"]):
-        option_text = question_font.render(option, True, (255, 255, 255))
-        screen.blit(option_text, (50, 100 + i * 30))
+        option_text = option_font.render(option, True, text_color)
+        option_rect = option_text.get_rect(center=(screen_width // 2, card_y + 150 + i * 40))
+        screen.blit(option_text, option_rect)
 
 # Función para verificar respuesta
 def check_answer(selected_option):
@@ -191,7 +213,7 @@ def game_loop():
 
         # Mostrar pregunta si está activa
         if show_question:
-            display_question()
+            Ventana_pregunta()
 
         # Actualizar pantalla
         pygame.display.update()
